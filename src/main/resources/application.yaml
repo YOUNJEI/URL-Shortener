@@ -1,0 +1,13 @@
+keycloak:
+  realm: project
+  auth-server-url: http://localhost:51897/auth
+  resource: url
+  credentials:
+    secret: PMO5hgl9Qz1lCYksJKYOWGYYwxKt90oY
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/url
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
