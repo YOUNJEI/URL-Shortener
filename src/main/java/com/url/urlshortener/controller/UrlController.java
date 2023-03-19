@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.servlet.http.HttpServletRequest;
+
 @RequiredArgsConstructor
 @Controller
 public class UrlController {
@@ -21,7 +23,7 @@ public class UrlController {
     }
 
     @GetMapping("/{short}")
-    public String redirect(@PathVariable("short") String shortUrl) {
-        return urlService.redirect(shortUrl);
+    public String redirect(@PathVariable("short") String shortUrl, HttpServletRequest request) {
+        return urlService.redirect(shortUrl, request);
     }
 }
