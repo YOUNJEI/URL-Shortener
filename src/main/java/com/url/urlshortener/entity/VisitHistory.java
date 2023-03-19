@@ -1,17 +1,21 @@
 package com.url.urlshortener.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Entity
 public class VisitHistory {
     @EmbeddedId
     private VisitHistoryId id;
-
-    @MapsId("shortUrl")
-    @ManyToOne
-    @JoinColumn(name = "short", referencedColumnName = "short")
-    private UrlMap urlMap;
 
     @Column(name = "browser", length = 10)
     private String browser;

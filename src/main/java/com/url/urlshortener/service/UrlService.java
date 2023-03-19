@@ -3,8 +3,11 @@ package com.url.urlshortener.service;
 import com.url.urlshortener.controller.dto.CollectInformationDto;
 import com.url.urlshortener.controller.dto.UrlCreateRequestDto;
 import com.url.urlshortener.entity.UrlMap;
+import com.url.urlshortener.entity.VisitHistory;
+import com.url.urlshortener.entity.VisitHistoryId;
 import com.url.urlshortener.exception.PageNotFoundException;
 import com.url.urlshortener.repository.UrlMapRepository;
+import com.url.urlshortener.repository.VisitHistoryRepository;
 import com.url.urlshortener.utility.ShortenerAlgorithm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +23,7 @@ import java.util.concurrent.CompletableFuture;
 @Service
 public class UrlService {
     private final UrlMapRepository urlMapRepository;
+    private final VisitHistoryRepository visitHistoryRepository;
     private final ShortenerAlgorithm shortenerAlgorithm;
 
     public ResponseEntity<String> createUrl(UrlCreateRequestDto urlCreateRequestDto) {
@@ -47,7 +51,7 @@ public class UrlService {
             throw new PageNotFoundException();
 
         // Async
-        CompletableFuture.runAsync(() -> collectInformation(CollectInformationDto.builder()
+        CompletableFuture.runAsync(() -> collectInformation(shortUrl, CollectInformationDto.builder()
                 .userAgent(request.getHeader("User-Agent"))
                 .ipAddress(request.getRemoteAddr())
                 .language(request.getLocale().getLanguage()).build()));
@@ -55,21 +59,17 @@ public class UrlService {
         return "redirect:" + urlMap.get().getOrigin();
     }
 
-    public void collectInformation(CollectInformationDto collectInformationDto) {
-        System.out.println("> called");
-        for (int i = 0; i < 1000000000; i++) {
-            for (int j = 0; j < 2; j++) {
-                int a = i + j;
-            }
-        }
-        System.out.println("> time delay done");
+    private void collectInformation(String shortUrl, CollectInformationDto collectInformationDto) {
+        Long sequence = visitHistoryRepository.countById(shortUrl);
 
-        String userAgent = collectInformationDto.getUserAgent();
-        String ipAddress = collectInformationDto.getIpAddress();
-        String language = collectInformationDto.getLanguage();
+        VisitHistoryId visitHistoryId = VisitHistoryId.builder()
+                .shortUrl(shortUrl)
+                .id(sequence + 1).build();
 
-        System.out.println(userAgent);
-        System.out.println(ipAddress);
-        System.out.println(language);
+        VisitHistory visitHistory = visitHistoryRepository.save(VisitHistory.builder()
+                .id(visitHistoryId)
+                .browser(collectInformationDto.getUserAgent().substring(0, 10))
+                .location(collectInformationDto.getIpAddress())
+                .language(collectInformationDto.getLanguage()).build());
     }
 }
