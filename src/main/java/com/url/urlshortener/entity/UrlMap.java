@@ -1,22 +1,18 @@
 package com.url.urlshortener.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.domain.Persistable;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
 
-@AllArgsConstructor
-@NoArgsConstructor
+@Setter
 @Getter
-@Builder
+@NoArgsConstructor
 @Entity
 public class UrlMap implements Persistable<String> {
     @Id
-    @Column(name = "origin")
+    @Column(name = "origin", length = 500)
     private String origin;
 
     @Column(name = "short", nullable = false, length = 7)
@@ -37,4 +33,10 @@ public class UrlMap implements Persistable<String> {
     @PrePersist
     @PostLoad
     public void markNotNew() { this.isNew = false; }
+
+    @Builder
+    public UrlMap(String origin, String shortUrl) {
+        this.origin = origin;
+        this.shortUrl = shortUrl;
+    }
 }

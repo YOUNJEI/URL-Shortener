@@ -1,19 +1,19 @@
 package com.url.urlshortener.entity;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.data.domain.Persistable;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
 
+@Setter
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @Entity
-public class VisitHistory {
+public class VisitHistory implements Persistable<VisitHistoryId> {
     @EmbeddedId
     private VisitHistoryId id;
 
@@ -28,4 +28,25 @@ public class VisitHistory {
 
     @Column(name = "visited", columnDefinition = "TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP")
     private Timestamp visited;
+
+    @Transient
+    private boolean isNew = true;
+
+    @Override
+    public VisitHistoryId getId() { return id; }
+
+    @Override
+    public boolean isNew() { return isNew; }
+
+    @PrePersist
+    @PostLoad
+    public void markNotNew() { this.isNew = false; }
+
+    @Builder
+    public VisitHistory(VisitHistoryId id, String browser, String location, String language) {
+        this.id = id;
+        this.browser = browser;
+        this.location = location;
+        this.language = language;
+    }
 }
