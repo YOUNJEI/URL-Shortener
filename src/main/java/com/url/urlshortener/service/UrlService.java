@@ -25,12 +25,18 @@ public class UrlService {
     private final UrlMapRepository urlMapRepository;
     private final VisitHistoryRepository visitHistoryRepository;
     private final ShortenerAlgorithm shortenerAlgorithm;
+    private final RedisService redisService;
 
     public ResponseEntity<String> createUrl(UrlCreateRequestDto urlCreateRequestDto) {
-        Optional<UrlMap> urlMap = urlMapRepository.findById(urlCreateRequestDto.getOrigin());
+        String cache = redisService.getValue("origin::" + urlCreateRequestDto.getOrigin());
+        if (cache != null)
+            return ResponseEntity.ok().body(cache);
 
-        if (urlMap.isPresent())
+        Optional<UrlMap> urlMap = urlMapRepository.findById(urlCreateRequestDto.getOrigin());
+        if (urlMap.isPresent()) {
+            redisService.setValue("origin::" + urlMap.get().getOrigin(), urlMap.get().getShortUrl());
             return ResponseEntity.ok().body(urlMap.get().getShortUrl());
+        }
 
         // create unique short URL
         String shortUrl = urlCreateRequestDto.getOrigin();
@@ -41,12 +47,23 @@ public class UrlService {
         UrlMap save = urlMapRepository.save(UrlMap.builder()
                 .origin(urlCreateRequestDto.getOrigin())
                 .shortUrl(shortUrl).build());
+
+        redisService.setValue("origin::" + save.getOrigin(), save.getShortUrl());
         return ResponseEntity.ok().body(save.getShortUrl());
     }
 
     public String redirect(String shortUrl, HttpServletRequest request) {
-        Optional<UrlMap> urlMap = urlMapRepository.findByShortUrl(shortUrl);
+        String cache = redisService.getValue("short::" + shortUrl);
+        if (cache != null) {
+            CompletableFuture.runAsync(() -> collectInformation(shortUrl, CollectInformationDto.builder()
+                    .userAgent(request.getHeader("User-Agent"))
+                    .ipAddress(request.getRemoteAddr())
+                    .language(request.getLocale().getLanguage()).build()));
 
+            return "redirect:" + cache;
+        }
+
+        Optional<UrlMap> urlMap = urlMapRepository.findByShortUrl(shortUrl);
         if (!urlMap.isPresent())
             throw new PageNotFoundException();
 
@@ -55,6 +72,8 @@ public class UrlService {
                 .userAgent(request.getHeader("User-Agent"))
                 .ipAddress(request.getRemoteAddr())
                 .language(request.getLocale().getLanguage()).build()));
+
+        redisService.setValue("short::" + urlMap.get().getShortUrl(), urlMap.get().getOrigin(), 3);
 
         return "redirect:" + urlMap.get().getOrigin();
     }

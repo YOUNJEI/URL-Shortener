@@ -40,7 +40,7 @@ public class ShortenerAlgorithm {
 
             for (int j = 0; j < 6; j++)
                 c += (bits.charAt(i + j) - '0') * Math.pow(2, 5 - j);
-            stringBuilder.append(BASE62_CHARSET.charAt(c));
+            stringBuilder.append(BASE62_CHARSET.charAt(c % 62));
         }
         return stringBuilder.toString();
     }
