@@ -20,7 +20,9 @@ var main = {
         }).done(function (response) {
             $('#short').val(response.shortUrl);
         }).fail(function (error) {
-            alert(JSON.stringify(error));
+            var response = JSON.parse(error.responseText);
+            $('#short').val(null);
+            alert(response.message);
         });
     }
 };

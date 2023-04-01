@@ -6,6 +6,8 @@ import com.url.urlshortener.controller.dto.UrlCreateResponseDto;
 import com.url.urlshortener.entity.UrlMap;
 import com.url.urlshortener.entity.VisitHistory;
 import com.url.urlshortener.entity.VisitHistoryId;
+import com.url.urlshortener.exception.CustomException;
+import com.url.urlshortener.exception.CustomExceptionEnum;
 import com.url.urlshortener.exception.PageNotFoundException;
 import com.url.urlshortener.repository.UrlMapRepository;
 import com.url.urlshortener.repository.VisitHistoryRepository;
@@ -29,6 +31,9 @@ public class UrlService {
     private final RedisService redisService;
 
     public ResponseEntity<UrlCreateResponseDto> createUrl(UrlCreateRequestDto urlCreateRequestDto) {
+        if (!urlCreateRequestDto.isInvalidate())
+            throw new CustomException(CustomExceptionEnum.URL_INVALID);
+
         String cache = redisService.getValue("origin::" + urlCreateRequestDto.getOrigin());
         if (cache != null)
             return ResponseEntity.ok().body(new UrlCreateResponseDto(cache));
