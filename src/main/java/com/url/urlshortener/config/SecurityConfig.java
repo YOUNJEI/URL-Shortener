@@ -41,6 +41,7 @@ public class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .antMatchers("/api/v1/**").authenticated()
+                .antMatchers("/page/**").authenticated()
                 .anyRequest().permitAll();
     }
 }

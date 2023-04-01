@@ -1,0 +1,22 @@
+{{>layout/header}}
+
+<h1>Create short URL</h1>
+<div class="col-md-12">
+    <div class="col-md-4">
+        <form>
+            <div class="form-group">
+                <label for="origin">Origin URL</label>
+                <input type="text" class="form-control" id="origin" placeholder="Enter origin URL">
+            </div>
+
+            <div class="form-group">
+                <label for="short">Short URL</label>
+                <input type="text" class="form-control" id="short" readonly>
+            </div>
+        </form>
+        <a href="/page/home" role="button" class="btn btn-secondary">Back</a>
+        <button type="button" class="btn btn-primary" id="btn-create">OK</button>
+    </div>
+</div>
+
+{{>layout/footer}}
