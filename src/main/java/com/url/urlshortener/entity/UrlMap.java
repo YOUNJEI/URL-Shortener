@@ -10,10 +10,9 @@ import java.sql.Timestamp;
 @Getter
 @NoArgsConstructor
 @Entity
-public class UrlMap implements Persistable<String> {
-    @Id
-    @Column(name = "origin", length = 500)
-    private String origin;
+public class UrlMap implements Persistable<UrlMapId> {
+    @EmbeddedId
+    private UrlMapId id;
 
     @Column(name = "short", nullable = false, length = 7)
     private String shortUrl;
@@ -25,7 +24,7 @@ public class UrlMap implements Persistable<String> {
     private boolean isNew = true;
 
     @Override
-    public String getId() { return origin; }
+    public UrlMapId getId() { return id; }
 
     @Override
     public boolean isNew() { return isNew; }
@@ -35,8 +34,8 @@ public class UrlMap implements Persistable<String> {
     public void markNotNew() { this.isNew = false; }
 
     @Builder
-    public UrlMap(String origin, String shortUrl) {
-        this.origin = origin;
+    public UrlMap(UrlMapId urlMapId, String shortUrl) {
+        this.id = urlMapId;
         this.shortUrl = shortUrl;
     }
 }

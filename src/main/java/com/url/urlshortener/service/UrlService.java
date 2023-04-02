@@ -4,6 +4,7 @@ import com.url.urlshortener.controller.dto.CollectInformationDto;
 import com.url.urlshortener.controller.dto.UrlCreateRequestDto;
 import com.url.urlshortener.controller.dto.UrlCreateResponseDto;
 import com.url.urlshortener.entity.UrlMap;
+import com.url.urlshortener.entity.UrlMapId;
 import com.url.urlshortener.entity.VisitHistory;
 import com.url.urlshortener.entity.VisitHistoryId;
 import com.url.urlshortener.exception.CustomException;
@@ -34,27 +35,20 @@ public class UrlService {
         if (!urlCreateRequestDto.isInvalidate())
             throw new CustomException(CustomExceptionEnum.URL_INVALID);
 
-        String cache = redisService.getValue("origin::" + urlCreateRequestDto.getOrigin());
-        if (cache != null)
-            return ResponseEntity.ok().body(new UrlCreateResponseDto(cache));
-
-        Optional<UrlMap> urlMap = urlMapRepository.findById(urlCreateRequestDto.getOrigin());
-        if (urlMap.isPresent()) {
-            redisService.setValue("origin::" + urlMap.get().getOrigin(), urlMap.get().getShortUrl());
+        UrlMapId urlMapId = urlCreateRequestDto.getUrlMapId();
+        Optional<UrlMap> urlMap = urlMapRepository.findById(urlMapId);
+        if (urlMap.isPresent())
             return ResponseEntity.ok().body(new UrlCreateResponseDto(urlMap.get().getShortUrl()));
-        }
 
         // create unique short URL
-        String shortUrl = urlCreateRequestDto.getOrigin();
+        String shortUrl = urlMapId.getOrigin() + ":" + urlMapId.getOwner();
         do {
             shortUrl = shortenerAlgorithm.createShortUrl(shortUrl);
         } while (urlMapRepository.existsByShortUrl(shortUrl));
 
         UrlMap save = urlMapRepository.save(UrlMap.builder()
-                .origin(urlCreateRequestDto.getOrigin())
+                .urlMapId(urlMapId)
                 .shortUrl(shortUrl).build());
-
-        redisService.setValue("origin::" + save.getOrigin(), save.getShortUrl());
         return ResponseEntity.ok().body(new UrlCreateResponseDto(save.getShortUrl()));
     }
 
@@ -79,9 +73,10 @@ public class UrlService {
                 .ipAddress(request.getRemoteAddr())
                 .language(request.getLocale().getLanguage()).build()));
 
-        redisService.setValue("short::" + urlMap.get().getShortUrl(), urlMap.get().getOrigin(), 3);
+        assert urlMap.get().getId() != null;
+        redisService.setValue("short::" + urlMap.get().getShortUrl(), urlMap.get().getId().getOrigin(), 3);
 
-        return "redirect:" + urlMap.get().getOrigin();
+        return "redirect:" + urlMap.get().getId().getOrigin();
     }
 
     private void collectInformation(String shortUrl, CollectInformationDto collectInformationDto) {
