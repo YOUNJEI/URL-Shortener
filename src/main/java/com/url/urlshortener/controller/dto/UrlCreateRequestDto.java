@@ -10,7 +10,11 @@ public class UrlCreateRequestDto {
     private String origin;
 
     public boolean isInvalidate() {
-        return this.origin.matches("(https?:\\/\\/)?(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-z]{2,6}\\b([-a-zA-Z0-9@:%_\\+.~#?&//=]*)");
+        if (!this.origin.matches("(https?:\\/\\/)?(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-z]{2,6}\\b([-a-zA-Z0-9@:%_\\+.~#?&//=]*)"))
+            return false;
+        if (!this.origin.matches("^https?://.*"))
+            origin = "http://" + origin;
+        return true;
     }
 
     public UrlMapId getUrlMapId() {

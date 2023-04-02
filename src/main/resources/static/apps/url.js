@@ -20,9 +20,13 @@ var main = {
         }).done(function (response) {
             $('#short').val(response.shortUrl);
         }).fail(function (error) {
-            var response = JSON.parse(error.responseText);
             $('#short').val(null);
-            alert(response.message);
+
+            var response = JSON.parse(error.responseText);
+            if (response.message != null)
+                alert(response.message);
+            else
+                alert(JSON.stringify(error.responseText));
         });
     }
 };

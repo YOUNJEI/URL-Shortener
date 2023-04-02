@@ -30,6 +30,7 @@ public class UrlService {
     private final VisitHistoryRepository visitHistoryRepository;
     private final ShortenerAlgorithm shortenerAlgorithm;
     private final RedisService redisService;
+    private final HttpServletRequest httpServletRequest;
 
     public ResponseEntity<UrlCreateResponseDto> createUrl(UrlCreateRequestDto urlCreateRequestDto) {
         if (!urlCreateRequestDto.isInvalidate())
@@ -38,7 +39,7 @@ public class UrlService {
         UrlMapId urlMapId = urlCreateRequestDto.getUrlMapId();
         Optional<UrlMap> urlMap = urlMapRepository.findById(urlMapId);
         if (urlMap.isPresent())
-            return ResponseEntity.ok().body(new UrlCreateResponseDto(urlMap.get().getShortUrl()));
+            return ResponseEntity.ok().body(new UrlCreateResponseDto(urlMap.get().getShortUrl(), httpServletRequest));
 
         // create unique short URL
         String shortUrl = urlMapId.getOrigin() + ":" + urlMapId.getOwner();
@@ -49,7 +50,7 @@ public class UrlService {
         UrlMap save = urlMapRepository.save(UrlMap.builder()
                 .urlMapId(urlMapId)
                 .shortUrl(shortUrl).build());
-        return ResponseEntity.ok().body(new UrlCreateResponseDto(save.getShortUrl()));
+        return ResponseEntity.ok().body(new UrlCreateResponseDto(save.getShortUrl(), httpServletRequest));
     }
 
     public String redirect(String shortUrl, HttpServletRequest request) {
