@@ -84,7 +84,7 @@ public class UrlService {
         UrlMap urlMap = UrlMap.builder()
                 .shortUrl(shortUrl).build();
 
-        Long sequence = visitHistoryRepository.countById(urlMap);
+        Long sequence = visitHistoryRepository.countById_UrlMap(urlMap);
 
         VisitHistoryId visitHistoryId = VisitHistoryId.builder()
                 .urlMap(urlMap)
