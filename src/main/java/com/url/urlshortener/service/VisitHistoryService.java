@@ -38,7 +38,7 @@ public class VisitHistoryService {
         if (!urlMap.getId().getOwner().equals(userName))
             throw new CustomException(CustomExceptionEnum.SHORT_URL_PERMISSION_DENIED);
 
-        List<VisitHistory> visitHistoryList = visitHistoryRepository.findAllById_UrlMap_ShortUrl(shortUrl); // Query 2
+        List<VisitHistory> visitHistoryList = visitHistoryRepository.findAllById_UrlMap_ShortUrlOrderByIdIdDesc(shortUrl);
         return new UrlVisitorDetailResponseDto(urlMap, visitHistoryList);
     }
 

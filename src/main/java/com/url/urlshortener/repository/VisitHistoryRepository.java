@@ -12,5 +12,5 @@ import java.util.List;
 public interface VisitHistoryRepository extends JpaRepository<VisitHistory, VisitHistoryId> {
     Long countById_UrlMap(UrlMap urlMap);
 
-    List<VisitHistory> findAllById_UrlMap_ShortUrl(String shortUrl);
+    List<VisitHistory> findAllById_UrlMap_ShortUrlOrderByIdIdDesc(String shortUrl);
 }

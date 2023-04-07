@@ -12,6 +12,7 @@ import com.url.urlshortener.exception.CustomExceptionEnum;
 import com.url.urlshortener.exception.PageNotFoundException;
 import com.url.urlshortener.repository.UrlMapRepository;
 import com.url.urlshortener.repository.VisitHistoryRepository;
+import com.url.urlshortener.utility.Geoip;
 import com.url.urlshortener.utility.ShortenerAlgorithm;
 import lombok.RequiredArgsConstructor;
 import org.keycloak.KeycloakPrincipal;
@@ -33,6 +34,7 @@ public class UrlService {
     private final ShortenerAlgorithm shortenerAlgorithm;
     private final RedisService redisService;
     private final HttpServletRequest httpServletRequest;
+    private final Geoip geoip;
 
     public ResponseEntity<UrlCreateResponseDto> createUrl(UrlCreateRequestDto urlCreateRequestDto) {
         if (!urlCreateRequestDto.isInvalidate())
@@ -108,8 +110,31 @@ public class UrlService {
 
         visitHistoryRepository.save(VisitHistory.builder()
                 .id(visitHistoryId)
-                .browser(collectInformationDto.getUserAgent().substring(0, 10))
-                .location(collectInformationDto.getIpAddress())
+                .browser(parseBrowser(collectInformationDto.getUserAgent()))
+                .location(geoip.getLocation(collectInformationDto.getIpAddress()))
                 .language(collectInformationDto.getLanguage()).build());
+    }
+
+    private String parseBrowser(String userAgent) {
+        if (userAgent == null)
+            return "Unknown";
+
+        if (userAgent.contains("Chrome"))
+            return "Chrome";
+        else if (userAgent.contains("Safari"))
+            return "Safari";
+        else if (userAgent.contains("Trident"))
+            return "IE";
+        else if (userAgent.contains("Opera"))
+            return "Opera";
+        else if (userAgent.contains("Edge"))
+            return "Edge";
+        else if (userAgent.contains("FireFox"))
+            return "FireFox";
+        else if (userAgent.contains("iPhone"))
+            return "iPhone";
+        else if (userAgent.contains("Android"))
+            return "Android";
+        return "Unknown";
     }
 }
