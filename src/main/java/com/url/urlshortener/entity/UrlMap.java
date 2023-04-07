@@ -4,13 +4,14 @@ import lombok.*;
 import org.springframework.data.domain.Persistable;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.sql.Timestamp;
 
 @Setter
 @Getter
 @NoArgsConstructor
 @Entity
-public class UrlMap implements Persistable<UrlMapId> {
+public class UrlMap implements Persistable<UrlMapId>, Serializable {
     @EmbeddedId
     private UrlMapId id;
 
