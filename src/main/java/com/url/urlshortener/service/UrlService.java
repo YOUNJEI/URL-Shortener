@@ -63,6 +63,7 @@ public class UrlService {
         String userName = keycloakPrincipal.getKeycloakSecurityContext().getToken().getPreferredUsername();
         if (!urlMap.getId().getOwner().equals(userName))
             throw new CustomException(CustomExceptionEnum.SHORT_URL_PERMISSION_DENIED);
+        redisService.deleteKey("short::" + urlMap.getShortUrl());
         urlMapRepository.delete(urlMap);
 
         return ResponseEntity.ok().body(null);

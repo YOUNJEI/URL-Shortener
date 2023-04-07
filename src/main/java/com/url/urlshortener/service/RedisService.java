@@ -19,6 +19,10 @@ public class RedisService {
         redisTemplate.opsForValue().set(key, value, timeout, TimeUnit.DAYS);
     }
 
+    public void deleteKey(String key) {
+        redisTemplate.delete(key);
+    }
+
     public String getValue(String key) {
         return redisTemplate.opsForValue().get(key);
     }
