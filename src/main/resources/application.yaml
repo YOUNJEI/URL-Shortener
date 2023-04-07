@@ -1,6 +1,6 @@
 keycloak:
   realm: project
-  auth-server-url: http://localhost:58730/auth
+  auth-server-url: http://localhost:56794/auth
   resource: url
   credentials:
     secret: PMO5hgl9Qz1lCYksJKYOWGYYwxKt90oY

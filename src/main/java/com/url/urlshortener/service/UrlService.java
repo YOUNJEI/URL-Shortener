@@ -81,13 +81,16 @@ public class UrlService {
     }
 
     private void collectInformation(String shortUrl, CollectInformationDto collectInformationDto) {
-        Long sequence = visitHistoryRepository.countById(shortUrl);
+        UrlMap urlMap = UrlMap.builder()
+                .shortUrl(shortUrl).build();
+
+        Long sequence = visitHistoryRepository.countById(urlMap);
 
         VisitHistoryId visitHistoryId = VisitHistoryId.builder()
-                .shortUrl(shortUrl)
+                .urlMap(urlMap)
                 .id(sequence + 1).build();
 
-        VisitHistory visitHistory = visitHistoryRepository.save(VisitHistory.builder()
+        visitHistoryRepository.save(VisitHistory.builder()
                 .id(visitHistoryId)
                 .browser(collectInformationDto.getUserAgent().substring(0, 10))
                 .location(collectInformationDto.getIpAddress())

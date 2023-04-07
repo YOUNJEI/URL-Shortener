@@ -5,8 +5,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import java.io.Serializable;
 
 @Getter
@@ -15,8 +16,9 @@ import java.io.Serializable;
 @Builder
 @Embeddable
 public class VisitHistoryId implements Serializable {
-    @Column(name = "short")
-    private String shortUrl;
+    @ManyToOne
+    @JoinColumn(name = "short", referencedColumnName = "short")
+    private UrlMap urlMap;
 
     private Long id;
 }
