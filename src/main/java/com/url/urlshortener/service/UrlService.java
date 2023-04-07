@@ -14,7 +14,9 @@ import com.url.urlshortener.repository.UrlMapRepository;
 import com.url.urlshortener.repository.VisitHistoryRepository;
 import com.url.urlshortener.utility.ShortenerAlgorithm;
 import lombok.RequiredArgsConstructor;
+import org.keycloak.KeycloakPrincipal;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,6 +53,19 @@ public class UrlService {
                 .urlMapId(urlMapId)
                 .shortUrl(shortUrl).build());
         return ResponseEntity.ok().body(new UrlCreateResponseDto(save.getShortUrl(), httpServletRequest));
+    }
+
+    public ResponseEntity<String> deleteUrl(String shortUrl) {
+        UrlMap urlMap = urlMapRepository.findByShortUrl(shortUrl)
+                .orElseThrow(() -> new CustomException(CustomExceptionEnum.SHORT_URL_NOT_FOUND));
+
+        KeycloakPrincipal keycloakPrincipal = (KeycloakPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String userName = keycloakPrincipal.getKeycloakSecurityContext().getToken().getPreferredUsername();
+        if (!urlMap.getId().getOwner().equals(userName))
+            throw new CustomException(CustomExceptionEnum.SHORT_URL_PERMISSION_DENIED);
+        urlMapRepository.delete(urlMap);
+
+        return ResponseEntity.ok().body(null);
     }
 
     public String redirect(String shortUrl, HttpServletRequest request) {

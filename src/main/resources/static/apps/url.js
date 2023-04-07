@@ -4,6 +4,10 @@ var main = {
         $('#btn-create').on('click', function () {
             _this.create();
         });
+
+        $('.btn-delete').on('click', function (eventObject) {
+            _this.delete(eventObject);
+        });
     },
 
     create: function () {
@@ -27,6 +31,19 @@ var main = {
                 alert(response.message);
             else
                 alert(JSON.stringify(error.responseText));
+        });
+    },
+
+    delete : function (eventObject) {
+        var shortUrl = eventObject.target.value;
+
+        $.ajax({
+            type: 'DELETE',
+            url: '/api/v1/url/' + shortUrl
+        }).done(function () {
+            location.href = '/page/url-list';
+        }).fail(function (error) {
+            alert(JSON.stringify(error));
         });
     }
 };
