@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.domain.Persistable;
 
 import javax.persistence.*;
@@ -26,7 +27,8 @@ public class VisitHistory implements Persistable<VisitHistoryId> {
     @Column(name = "language", length = 2)
     private String language;
 
-    @Column(name = "visited", columnDefinition = "TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP")
+    @CreationTimestamp
+    @Column(name = "visited", columnDefinition = "TIMESTAMP", nullable = false)
     private Timestamp visited;
 
     @Transient

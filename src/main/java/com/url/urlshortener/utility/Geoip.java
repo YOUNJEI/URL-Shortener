@@ -2,6 +2,7 @@ package com.url.urlshortener.utility;
 
 import com.maxmind.geoip2.DatabaseReader;
 import com.maxmind.geoip2.model.CityResponse;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -11,9 +12,7 @@ import java.net.InetAddress;
 public class Geoip {
     private final DatabaseReader reader;
 
-    public Geoip() throws Exception {
-        final String filePath = "/Users/younjei/dev/GeoLite2-City.mmdb";
-
+    public Geoip(@Value("${geoip.db-path}") String filePath) throws Exception {
         File database = new File(filePath);
         reader = new DatabaseReader.Builder(database).build();
     }

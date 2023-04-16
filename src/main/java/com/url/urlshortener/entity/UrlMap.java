@@ -1,6 +1,7 @@
 package com.url.urlshortener.entity;
 
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.domain.Persistable;
 
 import javax.persistence.*;
@@ -18,7 +19,8 @@ public class UrlMap implements Persistable<UrlMapId>, Serializable {
     @Column(name = "short", nullable = false, length = 7)
     private String shortUrl;
 
-    @Column(name = "created", columnDefinition = "TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP")
+    @CreationTimestamp
+    @Column(name = "created", columnDefinition = "TIMESTAMP", nullable = false)
     private Timestamp created;
 
     @Transient

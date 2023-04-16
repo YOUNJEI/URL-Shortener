@@ -22,7 +22,10 @@ spring:
 
 keycloak:
   realm: project
-  auth-server-url: http://localhost:52585/auth
+  auth-server-url: http://localhost:55360/auth
   resource: url
   credentials:
     secret: PMO5hgl9Qz1lCYksJKYOWGYYwxKt90oY
+
+geoip:
+  db-path: "/Users/younjei/dev/GeoLite2-City.mmdb"
