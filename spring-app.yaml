@@ -16,7 +16,7 @@ spec:
         - name: younjei
       containers:
         - name: url-shortener
-          image: younjei/url-shortener:1.2.4
+          image: younjei/url-shortener:1.2.5
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: "prod"
