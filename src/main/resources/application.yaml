@@ -1,11 +1,7 @@
-keycloak:
-  realm: project
-  auth-server-url: http://localhost:56794/auth
-  resource: url
-  credentials:
-    secret: PMO5hgl9Qz1lCYksJKYOWGYYwxKt90oY
-
 spring:
+  config:
+    activate:
+      on-profile: dev
   datasource:
     url: jdbc:mysql://localhost:3306/url
     username: root
@@ -18,3 +14,10 @@ spring:
   redis:
     host: localhost
     port: 6379
+
+keycloak:
+  realm: project
+  auth-server-url: http://localhost:56794/auth
+  resource: url
+  credentials:
+    secret: PMO5hgl9Qz1lCYksJKYOWGYYwxKt90oY

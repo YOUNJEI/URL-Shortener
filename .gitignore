@@ -38,3 +38,6 @@ out/
 
 ### local ###
 .DS_Store
+
+### prod ###
+application-prod.yaml
