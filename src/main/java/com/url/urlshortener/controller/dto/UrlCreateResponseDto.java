@@ -9,6 +9,6 @@ public class UrlCreateResponseDto {
     public String shortUrl;
 
     public UrlCreateResponseDto(String shortUrl, HttpServletRequest httpServletRequest) {
-        this.shortUrl = httpServletRequest.getServerName() + ":8080/" + shortUrl;
+        this.shortUrl = httpServletRequest.getServerName() + "s/" + shortUrl;
     }
 }

@@ -20,6 +20,9 @@ spring:
     host: localhost
     port: 6379
 
+server:
+  forward-headers-strategy: framework
+
 keycloak:
   realm: project
   auth-server-url: http://localhost:55360/auth
