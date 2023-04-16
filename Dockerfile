@@ -1,6 +1,5 @@
-FROM gradle:8-jdk8
-WORKDIR /app
-COPY . /app
-RUN ./gradlew build -x test
-COPY build/libs/URL-Shortener-0.0.1-SNAPSHOT.jar /app/app.jar
-CMD ["java", "-jar", "app.jar"]
+FROM openjdk:8-jre-alpine
+COPY build/libs/URL-Shortener-0.0.1-SNAPSHOT.jar app.jar
+ARG SPRING_PROFILES_ACTIVE=prod
+ENV SPRING_PROFILES_ACTIVE ${SPRING_PROFILES_ACTIVE}
+CMD ["java", "-jar", "-Dspring.profiles.active=${SPRING_PROFILES_ACTIVE}", "app.jar"]

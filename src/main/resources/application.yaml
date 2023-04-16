@@ -1,4 +1,9 @@
 spring:
+  profiles:
+    active: dev
+---
+
+spring:
   config:
     activate:
       on-profile: dev
@@ -17,7 +22,7 @@ spring:
 
 keycloak:
   realm: project
-  auth-server-url: http://localhost:56794/auth
+  auth-server-url: http://localhost:52585/auth
   resource: url
   credentials:
     secret: PMO5hgl9Qz1lCYksJKYOWGYYwxKt90oY
