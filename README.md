@@ -19,5 +19,5 @@
 ### 연결문서
 * [EC2 k8s 클러스터 구성](doc/kubernetes.md)
 * [keycloak set-up 과정](doc/keycloak.md)
-* [엔티티 DDL]
 * [단축 알고리즘]
+* [엔터티 DDL](doc/ddl.md)
