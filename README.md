@@ -1,5 +1,6 @@
 ## URL-Shortener (단축 URL 생성 서비스)
-배포 URL: http://43.200.64.114
+배포 URL: http://43.200.64.114  
+[데모영상]![demo_video](doc/demo_video.gif)
 ### 아키텍처 그림
 ![img](doc/img/architecture.jpg)
 ### 연결문서
