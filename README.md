@@ -1,7 +1,21 @@
 ## URL-Shortener (단축 URL 생성 서비스)
-배포 URL: http://43.200.64.114  
-[데모영상]![demo_video](doc/demo_video.gif)
+단축 URL을 생성하고, 방문자 정보(브라우저, 위치, 언어, 시간)를 수집합니다.
+### 배포 URL 및 데모 영상
+배포 주소: http://43.200.64.114  
+[데모 영상 보기](doc/demo_video.md)
 ### 아키텍처 그림
 ![img](doc/img/architecture.jpg)
+### 사용 기술 및 개발 환경
+* Kubernetes Single Node Cluster (EC2)
+* SpringBoot - URL Shortener 서비스  
+* Keycloak - 인증서버
+* nginx - 프록시
+* Mysql
+* Redis
+* Postgresql
+* geoip - 위치 정보 오픈 소스 데이터베이스
 ### 연결문서
 * [EC2 k8s 클러스터 구성](doc/kubernetes.md)
+* [keycloak set-up 과정](doc/keycloak.md)
+* [엔티티 DDL]
+* [단축 알고리즘]
