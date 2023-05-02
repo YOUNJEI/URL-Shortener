@@ -2,15 +2,21 @@
 keycloak 설치를 위해 helm을 이용하였으며, realm 및 client 설정 과정에 대한 기록입니다.
 ### 1. 설치 (helm)
 ```
-helm repo add codecentric https://codecentric.github.io/helm-charts
+# helm 설치
+curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 > get_helm.sh
+chmod 700 get_helm.sh
+./get_helm.sh
+helm version
 
+# keycloak 설치
+helm repo add codecentric https://codecentric.github.io/helm-charts
 # values.yaml 작성
 extraEnv: |
   - name: KEYCLOAK_USER
     value: <admin-id>
   - name: KEYCLOAK_PASSWORD
     value: <admin-password>
-
+    
 helm install keycloak codecentric/keycloak -f values.yaml
 ```
 

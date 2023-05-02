@@ -7,9 +7,11 @@
 ![img](doc/img/architecture.jpg)
 ### 사용 기술 및 개발 환경
 * Kubernetes Single Node Cluster (EC2)
+  * 비용절감을 위해 EKS가 아닌 EC2에 직접 kubernetes 클러스터 구성 
 * SpringBoot - URL Shortener 서비스  
 * Keycloak - 인증서버
 * nginx - 프록시
+  * [nginx 도입 이유](doc/nginx.md)
 * Mysql
 * Redis
 * Postgresql
